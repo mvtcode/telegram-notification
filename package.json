@@ -13,8 +13,12 @@
   "keywords": [],
   "author": "tanmv",
   "license": "ISC",
+  "engines": {
+    "node": ">=14.0.0"
+  },
   "dependencies": {
     "dotenv": "^16.0.1",
+    "firebase-admin": "^11.0.0",
     "mongoose": "^5.10.13",
     "node-telegram-bot-api": "^0.58.0",
     "winston": "^3.8.0"

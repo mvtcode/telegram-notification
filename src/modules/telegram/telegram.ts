@@ -1,8 +1,9 @@
 import { isValidObjectId } from 'mongoose';
-import { Message } from '../dto/message.dto';
-import { NotifierInterface } from '../interface/notifier';
-import { BaseDecorator } from './base.decorator';
-import TelegramModel from '../models/telegram.model';
+import { Message } from '../../dto/message.dto';
+import { NotifierInterface } from '../../interface/notifier';
+import { BaseDecorator } from '../../decorator/base.decorator';
+import TelegramModel from './telegram.model';
+import { TelegramEntity } from './telegram.dto';
 
 const TelegramBot = require('node-telegram-bot-api');
 
@@ -26,9 +27,19 @@ export class TelegramNotification extends BaseDecorator {
     this.sendTelegram(message);
   }
 
-  private sendTelegram(message: Message): void {
+  private async sendTelegram(message: Message): Promise<void> {
     this.logger.info(message);
-    this.bot.sendMessage(message.to, message.msg);
+
+    const list: TelegramEntity[] = await TelegramModel.find({
+      isEnable: true,
+    });
+
+    if (list && list.length > 0) {
+      // eslint-disable-next-line no-restricted-syntax
+      for (const tele of list) {
+        this.bot.sendMessage(tele.chatId, message.content);
+      }
+    }
   }
 
   private handlerEvent() {
@@ -65,6 +76,7 @@ export class TelegramNotification extends BaseDecorator {
       const chatId = msg.chat.id;
       this.logger.info(msg.text, match);
       if(chatId !== adminId) {
+        this.bot.sendMessage(chatId, 'You are not have permission');
         return;
       }
       this.bot.sendMessage(match[1], match[2]);
@@ -79,6 +91,7 @@ export class TelegramNotification extends BaseDecorator {
       const chatId = msg.chat.id;
       this.logger.info(msg.text, match);
       if(chatId !== adminId) {
+        this.bot.sendMessage(chatId, 'You are not have permission');
         return;
       }
       const id = match[1];
@@ -89,10 +102,11 @@ export class TelegramNotification extends BaseDecorator {
       this.bot.sendMessage(chatId, JSON.stringify(info));
     });
 
-    this.bot.onText(/\/allow (.+)/, async (msg: any, match: any) => {
+    this.bot.onText(/\/enable (.+)/, async (msg: any, match: any) => {
       const chatId = msg.chat.id;
       this.logger.info(msg.text, match);
       if(chatId !== adminId) {
+        this.bot.sendMessage(chatId, 'You are not have permission');
         return;
       }
       const id = match[1];
@@ -117,6 +131,7 @@ export class TelegramNotification extends BaseDecorator {
       const chatId = msg.chat.id;
       this.logger.info(msg.text, match);
       if(chatId !== adminId) {
+        this.bot.sendMessage(chatId, 'You are not have permission');
         return;
       }
       const id = match[1];
@@ -138,23 +153,27 @@ export class TelegramNotification extends BaseDecorator {
     });
   }
 
-  private async getList(msg: any, match: any) {
+  private async getList(msg: any, match: string[]) {
     const chatId = msg.chat.id;
     this.logger.info(chatId, msg.text, match);
     if(chatId !== adminId) {
+      this.bot.sendMessage(chatId, 'You are not have permission');
       return;
     }
+
     const page = parseInt(match[1] || '0', 0);
     const limit = parseInt(match[2] || '20', 20);
-    const isEnable = !(match[3] === 'disable');
-    const where = {
-      isEnable,
-    };
+    const where: any = {};
+    if (match[3] && ['enable', 'disable'].includes(match[3])) {
+      where.isEnable = match[3] === 'enable';
+    }
     const list = await TelegramModel.find(where)
       .select({
         _id: 1,
         type: 1,
         isEnable: 1,
+        username: 1,
+        title: 1,
       })
       .limit(limit)
       .skip(page * limit)

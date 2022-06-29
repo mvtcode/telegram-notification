@@ -1,17 +1,22 @@
-import { config } from 'dotenv';
+import './config';
 import connectMongoDB from './libs/mongodb';
-import { TelegramNotification } from './decorator/telegram.decorator';
+import { TelegramNotification } from './modules/telegram/telegram';
 import { Notification } from './implements/notification';
-
-config();
+import { FirebaseNotification } from './modules/firebase/firebase';
 
 (async () => {
   connectMongoDB();
 
   const notification = new Notification();
   const telegram = new TelegramNotification(notification);
-  telegram.send({
-    to: '-638589359',
-    msg: 'Say hello',
+  // telegram.send({
+  //   title: 'hello',
+  //   content: 'Say hello',
+  // });
+
+  const firebase = new FirebaseNotification(telegram);
+  firebase.send({
+    title: 'hello',
+    content: 'Say hello',
   });
 })();
