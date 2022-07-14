@@ -46,6 +46,8 @@ Admin sẽ có một vài feature command line
 
 Bạn có thể edit/thêm/xóa command line trong file [telegram.ts](https://github.com/mvtcode/telegram-notification/blob/master/src/modules/telegram/telegram.ts#L45)
 
+Ngoài ra, trong bot có thể thêm command line để cho user tiện sử dụng tham khảo [bots commands](https://core.telegram.org/bots/#commands)
+  
 ## Firebase
 
 - Tạo project truy cập vào [firebase](https://console.firebase.google.com/)
