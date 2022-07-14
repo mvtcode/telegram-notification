@@ -59,9 +59,14 @@ Yêu cầu máy đc cài sẵn nodejs v14
 ```
 npm i
 
+# start dev
+npm run dev
+
 # build
 npm run build
 
+# run production
+npm start
 ```
 
 ## Author
