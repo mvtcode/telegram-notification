@@ -54,7 +54,7 @@ Ngoài ra, trong bot có thể thêm command line để cho user tiện sử d�
 - Cấu hình Cloud Messaging
 - Xong download file key vào thư mục `config` và đặt tên file là `serviceAccountKey.json`
 
-Bạn hoàn toàn có thể ko động đến firebase trong src/index.js không sử dụng đến file modules/firebase/firebase
+Bạn hoàn toàn có thể ko động đến firebase trong `src/index.js` không sử dụng đến file `modules/firebase/firebase.ts`
 
 ## Start project
 
