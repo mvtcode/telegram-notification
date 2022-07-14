@@ -44,6 +44,8 @@ Admin sẽ có một vài feature command line
 - /disable <id>: disable notification - update db isEnable = false
 - /send <id> <message>: admin sẽ gửi đoạn chat cho một user khác
 
+Bạn có thể edit/thêm/xóa command line trong file [telegram.ts](https://github.com/mvtcode/telegram-notification/blob/master/src/modules/telegram/telegram.ts#L45)
+
 ## Firebase
 
 - Tạo project truy cập vào [firebase](https://console.firebase.google.com/)
